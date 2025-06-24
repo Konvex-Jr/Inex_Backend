@@ -49,8 +49,8 @@ Este projeto oferece uma API para:
 
 1. **Clone o repositório:**
     ```bash
-    git clone https://github.com/seu-usuario/IA_KONVEX_BACKEND.git
-    cd IA_KONVEX_BACKEND
+    git clone https://github.com/Konvex-Jr/Inex_Backend.git
+    cd Inex_Backend
     ```
 
 2. **Crie e ative um ambiente virtual:**

@@ -12,6 +12,12 @@ class DatabaseConnection:
         self.conn.autocommit = True
         self.cur = self.conn.cursor()
 
+    def run_sql_file(self, file_path: str):
+        with open(file_path, 'r') as f:
+            sql = f.read()
+        self.cur.execute(sql)
+        print(f"✅ Executed {file_path}")
+
     def close(self):
         self.cur.close()
         self.conn.close()
