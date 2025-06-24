@@ -76,7 +76,7 @@ Este projeto oferece uma API para:
 Para iniciar o servidor FastAPI localmente:
 
 ```bash
-uvicorn infra.rag_api:app --reload
+uvicorn app.main:app --reload
 ```
 
 ## 📚 Endpoints Principais
