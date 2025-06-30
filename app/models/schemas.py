@@ -9,4 +9,5 @@ class DocumentOut(BaseModel):
 
 class QueryRequest(BaseModel):
     question: str
+    style: str = "generativo"
     top_k: int = 2

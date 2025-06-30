@@ -47,6 +47,9 @@ class DocumentService:
     def ask(self, req):
         question = req.question
         top_k = req.top_k
+        
+        if(req.style):
+            style = req.style
 
         if not self.store.documents:
             return {"answer": "Nenhum documento carregado ainda."}
@@ -59,26 +62,32 @@ class DocumentService:
 
         prompt = f"Contexto:\n{chr(10).join(context)}\n\nPergunta: {question}\nResposta:"
 
+        if style == "reflexivo":
+            content = (
+                "Você é a InExIA, uma assistente especializada em formar líderes e gestores com foco nos "
+                "Objetivos de Desenvolvimento Sustentável (ODSs) e nos Inner Development Goals (IDGs). "
+                "Adote uma abordagem reflexiva: incentive o usuário a pensar criticamente, formular novas perguntas, "
+                "e explorar diferentes perspectivas. Promova o autoconhecimento, a consciência sistêmica e a profundidade conceitual, "
+                "sem se afastar do contexto apresentado."
+            )
+        else:
+            content = (
+                "Você é a InExIA, uma assistente especializada em formar líderes e gestores com foco nos "
+                "Objetivos de Desenvolvimento Sustentável (ODSs) e nos Inner Development Goals (IDGs). "
+                "Adote uma abordagem generativa: seja assertiva, clara e concisa em suas respostas, com foco em ação, "
+                "aprendizado prático e orientação estratégica. Estimule o avanço do usuário em direção ao domínio dos temas."
+            )
+
+
         response = client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",
             messages=[
                 {
                     "role": "system",
-                    "content": (
-                        "Você é a InExIA, uma assistente dedicada a treinar líderes e gestores de forma reflexiva "
-                        "sobre os Objetivos de Desenvolvimento Sustentável (ODSs) e os Inner Development Goals (IDGs). "
-                        "Sua missão é facilitar o aprendizado, estimular perguntas profundas, oferecer clareza conceitual, "
-                        "exemplos práticos e incentivar a transformação consciente. "
-                        "Se o usuário fizer perguntas fora do contexto ou inusitadas, não negue a pergunta. "
-                        "Ao invés disso, responda com muita educação e gentileza, guiando-o a refletir sobre como "
-                        "o tema pode se relacionar ou contribuir para os ODSs e IDGs. "
-                        "Sempre busque assimilar a pergunta dentro desse contexto, promovendo uma autoreflexão construtiva "
-                        "que estimule a conexão entre o questionamento e os princípios dos ODSs e IDGs."
-                    )
+                    "content": content
                 },
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=300,
         )
         return {"answer": response.choices[0].message.content.strip()}
