@@ -4,6 +4,7 @@ def setup_middleware(app):
     origins = [
         "http://localhost:3000",
         "http://10.20.160.179:3000",
+        "https://inexai.com/"
     ]
     app.add_middleware(
         CORSMiddleware,
