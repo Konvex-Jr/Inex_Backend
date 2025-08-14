@@ -4,7 +4,7 @@ async function createChunksTable() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS chunks (
       id SERIAL PRIMARY KEY,
-      doc_id INTEGER REFERENCES documents(id),
+      document_id INTEGER REFERENCES documents(id),
       chunk_index INTEGER,
       text TEXT,
       embedding JSONB
@@ -12,17 +12,17 @@ async function createChunksTable() {
   `);
 }
 
-async function saveChunk(docId, chunkIndex, text, embedding) {
+async function saveChunk(documentId, chunkIndex, content, embedding) {
   await createChunksTable();
   await pool.query(
-    'INSERT INTO chunks (doc_id, chunk_index, text, embedding) VALUES ($1, $2, $3, $4)',
-    [docId, chunkIndex, text, JSON.stringify(embedding)]
+    'INSERT INTO chunks (document_id, chunk_index, content, embedding) VALUES ($1, $2, $3, $4)',
+    [documentId, chunkIndex, content, JSON.stringify(embedding)]
   );
 }
 
-async function getChunksByDocId(docId) {
+async function getChunksBydocumentId(documentId) {
   await createChunksTable();
-  const res = await pool.query('SELECT * FROM chunks WHERE doc_id = $1 ORDER BY chunk_index', [docId]);
+  const res = await pool.query('SELECT * FROM chunks WHERE document_id = $1 ORDER BY chunk_index', [documentId]);
   return res.rows;
 }
 
@@ -32,4 +32,4 @@ async function getAllChunks() {
   return res.rows;
 }
 
-module.exports = { saveChunk, getChunksByDocId, getAllChunks }; 
+module.exports = { saveChunk, getChunksBydocumentId, getAllChunks }; 

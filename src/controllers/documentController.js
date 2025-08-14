@@ -24,19 +24,20 @@ async function uploadDocument(req, res) {
     fs.writeFileSync(filePath, req.file.buffer);
 
     const text = await extractTextFromPDF(filePath);
+
     if (!text.trim()) {
       return res.status(400).json({ error: 'PDF sem texto extraível.' });
     }
 
-    const docId = await saveDocument(req.file.originalname, text);
+    const documentId = await saveDocument(req.file.originalname, text);
 
     const chunks = splitText(text, 1000);
     for (let i = 0; i < chunks.length; i++) {
       const embedding = await getEmbedding(chunks[i]);
-      await saveChunk(docId, i, chunks[i], embedding);
+      await saveChunk(documentId, i, chunks[i], embedding);
     }
 
-    return res.status(201).json({ id: docId, chunks: chunks.length });
+    return res.status(201).json({ id: documentId, chunks: chunks.length });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Erro ao processar o PDF.', details: err.message });

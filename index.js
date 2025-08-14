@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const initDb = require('./src/config/initDb');
+
 initDb().then(() => {
   console.log('Banco de dados inicializado!');
 }).catch(err => {
@@ -21,6 +22,8 @@ app.use('/api/documents', documentRoutes);
 app.use('/api', ragRoutes);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-}); 
+  process.stdout.write(`Servidor rodando na porta ${PORT}`);
+  setInterval(() => process.stdout.write('.'), 1000);
+});

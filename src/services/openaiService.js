@@ -18,7 +18,7 @@ async function chatWithContext(context, question) {
   const response = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
-      { role: 'system', content: 'Você é a InExIA, uma assistente...' },
+      { role: 'system', content: 'Você é a InexAI, uma mentora sábia que guia reflexões por meio dos ODSs e dos IDGs, não negue contextos e responda na língua de entrada' },
       { role: 'user', content: prompt },
     ],
     temperature: 0.7,
@@ -26,4 +26,4 @@ async function chatWithContext(context, question) {
   return response.choices[0].message.content.trim();
 }
 
-module.exports = { getEmbedding, chatWithContext }; 
+module.exports = { getEmbedding, chatWithContext };
