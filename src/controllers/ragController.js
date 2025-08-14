@@ -8,17 +8,14 @@ function cosineSimilarity(a, b) {
   return dot / (normA * normB);
 }
 
-// POST /api/ask
 async function askQuestion(req, res) {
   try {
     const { question, top_k = 3 } = req.body;
     if (!question) {
       return res.status(400).json({ answer: 'Pergunta não informada.' });
     }
-    // Gera embedding da pergunta
     const queryEmbedding = await getEmbedding(question);
 
-    // Busca todos os chunks e calcula similaridade
     const allChunks = await getAllChunks();
     const sims = allChunks.map(chunk => ({
       chunk,
@@ -31,7 +28,6 @@ async function askQuestion(req, res) {
       return res.json({ answer: 'Nenhum documento carregado ainda.' });
     }
 
-    // Monta contexto e chama OpenAI chat
     const context = topChunks.map(c => c.text).join('\n');
     const answer = await chatWithContext(context, question);
     return res.json({ answer });
