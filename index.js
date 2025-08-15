@@ -6,7 +6,7 @@ require('dotenv').config();
 const initDb = require('./src/config/initDb');
 
 initDb().then(() => {
-  console.log('Banco de dados inicializado!');
+  console.log('Banco de dados inicializado!\n');
 }).catch(err => {
   console.error('Erro ao inicializar o banco de dados:', err);
 });
@@ -24,6 +24,5 @@ app.use('/api', ragRoutes);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  process.stdout.write(`Servidor rodando na porta ${PORT}`);
-  setInterval(() => process.stdout.write('.'), 1000);
+  process.stdout.write(`Servidor rodando na porta ${PORT}\n`);
 });
