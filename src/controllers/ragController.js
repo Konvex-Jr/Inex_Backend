@@ -1,5 +1,6 @@
 const { getEmbedding, chatWithContext } = require('../services/openaiService');
 const { getAllChunks } = require('../models/chunk');
+const pdfParse = require('pdf-parse');
 
 function cosineSimilarity(a, b) {
   const dot = a.reduce((sum, v, i) => sum + v * b[i], 0);
@@ -10,6 +11,14 @@ function cosineSimilarity(a, b) {
 
 async function askQuestion(req, res) {
   try {
+    if (!req.file || !req.file.originalname.endsWith('.pdf')) {
+      return res.status(400).json({ error: 'Apenas PDFs são aceitos.' });
+    }
+
+    const pdfBuffer = req.file.buffer;
+    const pdfData = await pdfParse(pdfBuffer);
+    const pdfText = pdfData.text;
+
     const { question, top_k = 3 } = req.body;
     if (!question) {
       return res.status(400).json({ answer: 'Pergunta não informada.' });
@@ -26,7 +35,8 @@ async function askQuestion(req, res) {
       return res.json({ answer: 'Nenhum documento carregado ainda.' });
     }
     const context = topChunks.map(c => c.text).join('\n');
-    const answer = await chatWithContext(context, question);
+    const combinedContext = `${pdfText}\n${context}\n${question}`;
+    const answer = await chatWithContext(combinedContext, question);
     return res.json({ answer });
   } catch (err) {
     console.error(err);
