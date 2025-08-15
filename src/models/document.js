@@ -1,17 +1,6 @@
 const pool = require('../config/db');
 
-async function createDocumentsTable() {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS documents (
-      id SERIAL PRIMARY KEY,
-      filename TEXT,
-      content TEXT
-    )
-  `);
-}
-
 async function saveDocument(filename, content) {
-  await createDocumentsTable();
   const res = await pool.query(
     'INSERT INTO documents (filename, content) VALUES ($1, $2) RETURNING id',
     [filename, content]
@@ -25,7 +14,6 @@ async function getDocumentById(id) {
 }
 
 async function getAllDocuments() {
-  await createDocumentsTable();
   const res = await pool.query('SELECT * FROM documents');
   return res.rows;
 }

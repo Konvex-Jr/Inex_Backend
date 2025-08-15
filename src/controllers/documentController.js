@@ -35,6 +35,7 @@ async function uploadDocument(req, res) {
     for (let i = 0; i < chunks.length; i++) {
       const embedding = await getEmbedding(chunks[i]);
       await saveChunk(documentId, i, chunks[i], embedding);
+      
     }
 
     return res.status(201).json({ id: documentId, chunks: chunks.length });

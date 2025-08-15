@@ -19,6 +19,14 @@ async function initDb() {
       embedding JSONB
     );
   `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS tokens (
+      id SERIAL PRIMARY KEY,
+      type CHAR,
+      amount INT
+    );
+  `);
 }
 
 module.exports = initDb; 
