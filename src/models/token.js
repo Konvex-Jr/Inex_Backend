@@ -1,9 +1,9 @@
 const pool = require('../config/db');
 
-async function storeTokens(type, amount) {
+async function storeTokens(type, amount, model) {
   await pool.query(
-    'INSERT INTO tokens (type, amount) VALUES ($1, $2)',
-    [type, amount]
+    'INSERT INTO tokens (type, amount, model) VALUES ($1, $2, $3)',
+    [type, amount, model]
   );
 }
 

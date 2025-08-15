@@ -9,14 +9,16 @@ const openai = new OpenAI({
 
 async function getEmbedding(text) {
 
-  const encoding = encoding_for_model('text-embedding-3-small');
+  const model = "text-embedding-3-small";
+  
+  const encoding = encoding_for_model(model);
   const tokens = encoding.encode(text);
   const tokenCount = tokens.length;
 
-  storeTokens('D', tokenCount)
+  storeTokens('get-embedding', tokenCount, model);
 
   const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
+    model: model,
     input: text,
   });
 
@@ -24,7 +26,15 @@ async function getEmbedding(text) {
 }
 
 async function chatWithContext(context, question) {
+  const model = "gpt-4o-mini";
+  const encoding = encoding_for_model(model);
+
   const prompt = `Contexto:\n${context}\n\nPergunta: ${question}\nResposta:`;
+  const tokensPrompt = encoding.encode(prompt);
+  const inputTokenCount = tokensPrompt.length;
+
+  storeTokens('chat-input', inputTokenCount, model);
+
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
@@ -33,6 +43,10 @@ async function chatWithContext(context, question) {
     ],
     temperature: 0.7,
   });
+
+  const outputTokensCount = response.usage?.completion_tokens || 0;
+  storeTokens('chat-output', outputTokensCount, model);
+
   return response.choices[0].message.content.trim();
 }
 

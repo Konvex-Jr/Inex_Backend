@@ -23,8 +23,9 @@ async function initDb() {
   await db.query(`
     CREATE TABLE IF NOT EXISTS tokens (
       id SERIAL PRIMARY KEY,
-      type CHAR,
-      amount INT
+      type TEXT,
+      amount INT,
+      model TEXT
     );
   `);
 }
